@@ -3,6 +3,8 @@ import { baseUrl, deviceName } from './constants';
 import { DocumentByPhone } from '../types/DocumentByPhone';
 import { StatusDocument } from '../types/StatusDocument';
 import format from 'date-fns/format';
+import { ApiResponse } from '../types/ApiResponse';
+import { DocumentEWMovement } from '../types/DocumentEWMovement';
 
 const userPhone = localStorage.getItem('npuid')?.slice(-12);
 
@@ -18,6 +20,7 @@ const makeModel = (name: string) => {
 };
 
 const model = {
+  internetDocument: makeModel('InternetDocument'),
   loyaltyUser: makeModel('LoyaltyUser'),
   trackingDocument: makeModel('TrackingDocument'),
 };
@@ -33,7 +36,15 @@ const instance = axios.create({
 });
 
 instance.interceptors.response.use(
-  (response: AxiosResponse) => response.data.data
+  ({ data: { data, translatedErrors } }: AxiosResponse<ApiResponse<unknown>>) => {
+    const [firstError] = translatedErrors || [];
+
+    if (firstError) {
+      throw new Error(firstError);
+    }
+
+    return data as unknown as AxiosResponse;
+  }
 );
 
 const getUnclosedDocumentsByPhone = async (): Promise<DocumentByPhone[]> => {
@@ -80,7 +91,15 @@ const getStatusDocuments = async (documentIDs: Array<string | number>): Promise<
   );
 };
 
-const getDocumentsEWMovement = async () => {}; // todo
+const getDocumentsEWMovement = async (number: string | number): Promise<DocumentEWMovement[]> => { // todo many?
+  return instance.post(
+    'getDocumentsEWMovement',
+    model.internetDocument('getDocumentsEWMovement', {
+      Number: number,
+      NewFormat: 1,
+    })
+  );
+};
 
 const getCities = async () => {}; // todo
 

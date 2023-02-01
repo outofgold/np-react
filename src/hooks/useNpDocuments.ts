@@ -16,7 +16,7 @@ const transformResult = (docsByPhone: DocumentByPhone[], statusDocs: StatusDocum
     }));
 };
 
-const useNpDocuments = () => {
+const useNpDocuments = () => { // todo api error handling
   const [unclosedDocuments, setUnclosedDocuments] = useLocalStorage<DocumentByPhone[] | null>('UnclosedDocuments', null);
   const [closedDocuments, setClosedDocuments] = useLocalStorage<DocumentByPhone[] | null>('ClosedDocuments', null);
   const [statusDocuments, setStatusDocuments] = useLocalStorage<StatusDocument[] | null>('StatusDocuments', null);
