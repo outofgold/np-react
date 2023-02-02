@@ -25,11 +25,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail -n \"FE,Proxy\" \"react-scripts start\" \"cd proxy && npm start\"",
-    "start": "serve build/",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "concurrently --kill-others-on-fail -n \"FE,Proxy\" \"craco start\" \"cd proxy && npm start\"",
+    "start": "serve -s build",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "postinstall": "cd proxy && npm i"
   },
   "eslintConfig": {
@@ -55,6 +55,7 @@
     "npm": "^8.19"
   },
   "devDependencies": {
+    "@craco/craco": "^7.0.0",
     "concurrently": "^7.6.0"
   }
 }
