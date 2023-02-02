@@ -8,10 +8,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ScaleIcon from '@mui/icons-material/Scale';
-import { StatusDocument } from '../types/StatusDocument';
-import { DocumentEWMovement } from '../types/DocumentEWMovement';
-import { getDocumentsEWMovement } from '../api';
-import { DocumentMovementItem } from './DocumentMovementItem';
+import { StatusDocument } from '@app/types/StatusDocument';
+import { DocumentEWMovement } from '@app/types/DocumentEWMovement';
+import { getDocumentsEWMovement } from '@app/api';
+import { DocumentMovementItem } from '@app/components/DocumentMovementItem';
 
 interface Props {
   document: StatusDocument | null;

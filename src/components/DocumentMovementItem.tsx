@@ -5,7 +5,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { uk } from 'date-fns/locale';
 import { addMinutes, differenceInCalendarDays, format, formatRelative, parseISO } from 'date-fns';
-import { MovementItem } from '../types/DocumentEWMovement';
+import { MovementItem } from '@app/types/DocumentEWMovement';
 
 interface Props {
   type: 'passed' | 'now' | 'future';

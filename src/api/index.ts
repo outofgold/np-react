@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import format from 'date-fns/format';
-import { DocumentByPhone } from '../types/DocumentByPhone';
-import { StatusDocument } from '../types/StatusDocument';
-import { ApiResponse } from '../types/ApiResponse';
-import { DocumentEWMovement } from '../types/DocumentEWMovement';
-import { baseUrl, deviceName } from './constants';
+import { DocumentByPhone } from '@app/types/DocumentByPhone';
+import { StatusDocument } from '@app/types/StatusDocument';
+import { ApiResponse } from '@app/types/ApiResponse';
+import { DocumentEWMovement } from '@app/types/DocumentEWMovement';
+import { baseUrl, deviceName } from '@app/api/constants';
 
 const userPhone = localStorage.getItem('npuid')?.slice(-12);
 

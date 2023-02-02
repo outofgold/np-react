@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
-import { DocumentByPhone } from '../types/DocumentByPhone';
-import { StatusDocument } from '../types/StatusDocument';
-import { getClosedDocumentsByPhone, getStatusDocuments, getUnclosedDocumentsByPhone } from '../api';
-import { CustomStatusDocument } from '../types/CustomStatusDocument';
-import { useLocalStorage } from './useLocalStorage';
+import { DocumentByPhone } from '@app/types/DocumentByPhone';
+import { StatusDocument } from '@app/types/StatusDocument';
+import { getClosedDocumentsByPhone, getStatusDocuments, getUnclosedDocumentsByPhone } from '@app/api';
+import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
+import { useLocalStorage } from '@app/hooks/useLocalStorage';
 
 const transformResult = (docsByPhone: DocumentByPhone[], statusDocs: StatusDocument[]): CustomStatusDocument[] => {
   const ids = docsByPhone.map(({ Barcode }) => Barcode);

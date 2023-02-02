@@ -1,5 +1,5 @@
-import { StatusDocument } from './StatusDocument';
-import { DocumentByPhone } from './DocumentByPhone';
+import { StatusDocument } from '@app/types/StatusDocument';
+import { DocumentByPhone } from '@app/types/DocumentByPhone';
 
 export interface CustomStatusDocument extends StatusDocument {
   CustomType: DocumentByPhone['DataType'];

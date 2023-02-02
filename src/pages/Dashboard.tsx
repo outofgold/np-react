@@ -9,10 +9,10 @@ import Grid from '@mui/material/Grid';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { CircularProgress, Divider } from '@mui/material';
 import { useCallback, useState } from 'react';
-import { DocumentCard } from '../components/DocumentCard';
-import { useNpDocuments } from '../hooks/useNpDocuments';
-import { DocumentDetailsDialog } from '../components/DocumentDetailsDialog';
-import { CustomStatusDocument } from '../types/CustomStatusDocument';
+import { DocumentCard } from '@app/components/DocumentCard';
+import { useNpDocuments } from '@app/hooks/useNpDocuments';
+import { DocumentDetailsDialog } from '@app/components/DocumentDetailsDialog';
+import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
 
 const Dashboard = () => {
   const { unclosedStatusDocuments, closedStatusDocuments, fetchDocuments } = useNpDocuments();

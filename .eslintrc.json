@@ -22,7 +22,7 @@
       "files": ["src/**/*.js"]
     }
   ],
-  "plugins": ["react", "@typescript-eslint", "prettier", "import"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "import", "no-relative-import-paths"],
   "rules": {
     "@typescript-eslint/comma-dangle": "off",
     "comma-dangle": "off",
@@ -51,6 +51,10 @@
       { "blankLine": "always", "prev": "multiline-var", "next": "*" }
     ],
     "import/order": "warn",
+    "no-relative-import-paths/no-relative-import-paths": [
+      "warn",
+      { "allowSameFolder": false, "rootDir": "src", "prefix": "@app" }
+    ],
     "no-underscore-dangle": "off",
     "object-shorthand": "off",
     "indent": 0,

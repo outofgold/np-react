@@ -8,7 +8,7 @@ import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import { uk } from 'date-fns/locale';
-import { CustomStatusDocument } from '../types/CustomStatusDocument';
+import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
 
 interface Props {
   item: CustomStatusDocument;
