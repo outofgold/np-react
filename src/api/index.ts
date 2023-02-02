@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import { baseUrl, deviceName } from './constants';
+import format from 'date-fns/format';
 import { DocumentByPhone } from '../types/DocumentByPhone';
 import { StatusDocument } from '../types/StatusDocument';
-import format from 'date-fns/format';
 import { ApiResponse } from '../types/ApiResponse';
 import { DocumentEWMovement } from '../types/DocumentEWMovement';
+import { baseUrl, deviceName } from './constants';
 
 const userPhone = localStorage.getItem('npuid')?.slice(-12);
 
@@ -35,17 +35,15 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.response.use(
-  ({ data: { data, translatedErrors } }: AxiosResponse<ApiResponse<unknown>>) => {
-    const [firstError] = translatedErrors || [];
+instance.interceptors.response.use(({ data: { data, translatedErrors } }: AxiosResponse<ApiResponse<unknown>>) => {
+  const [firstError] = translatedErrors || [];
 
-    if (firstError) {
-      throw new Error(firstError);
-    }
-
-    return data as unknown as AxiosResponse;
+  if (firstError) {
+    throw new Error(firstError);
   }
-);
+
+  return data as unknown as AxiosResponse;
+});
 
 const getUnclosedDocumentsByPhone = async (): Promise<DocumentByPhone[]> => {
   return instance.post(
@@ -81,17 +79,18 @@ const getStatusDocuments = async (documentIDs: Array<string | number>): Promise<
         DocumentNumber: String(id),
         Phone: userPhone,
       })),
-      Language: 'UA'
+      Language: 'UA',
     }),
     {
       headers: {
-        'ew': `[${documentIDs.map(Number).join(', ')}]`,
-      }
+        ew: `[${documentIDs.map(Number).join(', ')}]`,
+      },
     }
   );
 };
 
-const getDocumentsEWMovement = async (number: string | number): Promise<DocumentEWMovement[]> => { // todo many?
+const getDocumentsEWMovement = async (number: string | number): Promise<DocumentEWMovement[]> => {
+  // todo many?
   return instance.post(
     'getDocumentsEWMovement',
     model.internetDocument('getDocumentsEWMovement', {
@@ -111,5 +110,5 @@ export {
   getStatusDocuments,
   getDocumentsEWMovement,
   getCities,
-  getWarehouses
+  getWarehouses,
 };

@@ -23,7 +23,14 @@ interface DocumentMovement {
 export interface MovementItem {
   Barcode: string;
   Date: string;
-  Event: 'Arrival' | 'CreateID' | 'CreateIDInternational' | 'Departure' | 'InCityRecipient' | 'MovingPostomat' | 'Received';
+  Event:
+    | 'Arrival'
+    | 'CreateID'
+    | 'CreateIDInternational'
+    | 'Departure'
+    | 'InCityRecipient'
+    | 'MovingPostomat'
+    | 'Received';
   EventDescription: string;
   Settlement: string;
   SettlementDescription: string;

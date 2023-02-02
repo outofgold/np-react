@@ -1,15 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { StatusDocument } from '../types/StatusDocument';
-import {
-  Box,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, Stack, Typography } from '@mui/material';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
 import { uk } from 'date-fns/locale';
@@ -18,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ScaleIcon from '@mui/icons-material/Scale';
+import { StatusDocument } from '../types/StatusDocument';
 import { DocumentEWMovement } from '../types/DocumentEWMovement';
 import { getDocumentsEWMovement } from '../api';
 import { DocumentMovementItem } from './DocumentMovementItem';
@@ -34,18 +25,17 @@ const DocumentDetailsDialog: FC<Props> = ({ document, handleClose }) => {
   useEffect(() => {
     if (!document) {
       setMovementDetails(null);
+
       return;
     }
 
-    getDocumentsEWMovement(document.Number)
-      .then((result) => setMovementDetails(result[0]));
+    getDocumentsEWMovement(document.Number).then((result) => setMovementDetails(result[0]));
   }, [document]);
-
 
   // smooth modal closing
   useEffect(() => {
     setIsOpen(Boolean(document));
-  }, [document])
+  }, [document]);
 
   // smooth modal closing
   const handleSmoothClose = useCallback(() => {
@@ -53,40 +43,27 @@ const DocumentDetailsDialog: FC<Props> = ({ document, handleClose }) => {
     setTimeout(handleClose, 200);
   }, [handleClose]);
 
-  const dateReceived = document?.RecipientDateTime && format(
-    parse(document.RecipientDateTime, 'dd.MM.y H:m:ss', new Date()),
-    'dd MMM y HH:mm',
-    { locale: uk }
-  );
+  const dateReceived =
+    document?.RecipientDateTime &&
+    format(parse(document.RecipientDateTime, 'dd.MM.y H:m:ss', new Date()), 'dd MMM y HH:mm', { locale: uk });
 
-  const dateActualDelivery = document?.ActualDeliveryDate && format(
-    parse(document.ActualDeliveryDate, 'y-MM-dd H:m:ss', new Date()),
-    'dd MMM y HH:mm',
-    { locale: uk }
-  );
+  const dateActualDelivery =
+    document?.ActualDeliveryDate &&
+    format(parse(document.ActualDeliveryDate, 'y-MM-dd H:m:ss', new Date()), 'dd MMM y HH:mm', { locale: uk });
 
-  const dateScheduledDelivery = !dateActualDelivery && document?.ScheduledDeliveryDate && format(
-    parse(document.ScheduledDeliveryDate, 'dd-MM-y H:m:ss', new Date()),
-    'dd MMM y HH:mm',
-    { locale: uk }
-  );
+  const dateScheduledDelivery =
+    !dateActualDelivery &&
+    document?.ScheduledDeliveryDate &&
+    format(parse(document.ScheduledDeliveryDate, 'dd-MM-y H:m:ss', new Date()), 'dd MMM y HH:mm', { locale: uk });
 
-  const dateSent = document?.DateCreated && format(
-    parse(document.DateCreated, 'dd-MM-y H:m:ss', new Date()),
-    'dd MMM y HH:mm',
-    { locale: uk }
-  );
+  const dateSent =
+    document?.DateCreated &&
+    format(parse(document.DateCreated, 'dd-MM-y H:m:ss', new Date()), 'dd MMM y HH:mm', { locale: uk });
 
   return (
-    <Dialog
-      fullWidth={true}
-      maxWidth={'md'}
-      open={isOpen}
-      onClose={handleSmoothClose}
-    >
+    <Dialog fullWidth={true} maxWidth={'md'} open={isOpen} onClose={handleSmoothClose}>
       <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
         Інформація про посилку
-
         <IconButton sx={{ ml: 'auto' }} onClick={handleSmoothClose}>
           <CloseIcon />
         </IconButton>
@@ -143,13 +120,21 @@ const DocumentDetailsDialog: FC<Props> = ({ document, handleClose }) => {
               <Box sx={{ mt: 1 }}>
                 <Typography fontWeight={'bolder'}>Адреса доставки</Typography>
 
-                <Typography fontSize={14} sx={{ ml: 2 }}>{document.RecipientAddress}</Typography>
+                <Typography fontSize={14} sx={{ ml: 2 }}>
+                  {document.RecipientAddress}
+                </Typography>
 
-                <Typography fontWeight={'bolder'} sx={{ mt: 1 }}>Відправник</Typography>
+                <Typography fontWeight={'bolder'} sx={{ mt: 1 }}>
+                  Відправник
+                </Typography>
 
-                <Typography fontSize={14} sx={{ ml: 2 }}>{document.SenderFullNameEW}</Typography>
+                <Typography fontSize={14} sx={{ ml: 2 }}>
+                  {document.SenderFullNameEW}
+                </Typography>
 
-                <Typography fontSize={14} sx={{ ml: 2 }}>{document.PhoneSender.replace(/^380/, '0')}</Typography>
+                <Typography fontSize={14} sx={{ ml: 2 }}>
+                  {document.PhoneSender.replace(/^380/, '0')}
+                </Typography>
               </Box>
 
               <Box sx={{ mt: 1 }}>
@@ -166,17 +151,17 @@ const DocumentDetailsDialog: FC<Props> = ({ document, handleClose }) => {
 
               {movementDetails && (
                 <>
-                  {movementDetails.movement.passed.map((item, index) =>
+                  {movementDetails.movement.passed.map((item, index) => (
                     <DocumentMovementItem key={index} type={'passed'} item={item} />
-                  )}
+                  ))}
 
-                  {movementDetails.movement.now.map((item, index) =>
+                  {movementDetails.movement.now.map((item, index) => (
                     <DocumentMovementItem key={index} type={'now'} item={item} />
-                  )}
+                  ))}
 
-                  {movementDetails.movement.future.map((item, index) =>
+                  {movementDetails.movement.future.map((item, index) => (
                     <DocumentMovementItem key={index} type={'future'} item={item} />
-                  )}
+                  ))}
                 </>
               )}
             </Grid>

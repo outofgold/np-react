@@ -1,5 +1,4 @@
 import React, { FC, ReactElement } from 'react';
-import { CustomStatusDocument } from '../types/CustomStatusDocument';
 import { Card, CardActionArea, CardActions, CardContent, Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -9,6 +8,7 @@ import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import { uk } from 'date-fns/locale';
+import { CustomStatusDocument } from '../types/CustomStatusDocument';
 
 interface Props {
   item: CustomStatusDocument;
@@ -19,7 +19,7 @@ interface Props {
 const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElement => {
   return (
     <Grid item xs={12} md={6} lg={4}>
-      <Card sx={{ display: "flex", flexDirection: "column" }}>
+      <Card sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardActionArea onClick={handleClick}>
           <CardContent>
             <Grid container alignItems="center" spacing={2} sx={{ height: 80 }}>
@@ -34,27 +34,27 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
               </Grid>
 
               <Grid item>
-                {item.CustomName &&
+                {item.CustomName && (
                   <Typography variant="h6" fontWeight="bold" component="div">
                     {item.CustomName}
                   </Typography>
-                }
+                )}
 
                 <Grid container alignItems="center">
                   <Grid item>
                     <Typography component="span">
-                      №{item.Number.length === 14
+                      №
+                      {item.Number.length === 14
                         ? item.Number.replace(/^(.{2})(.{4})(.{4})(.{4})$/, '$1 $2 $3 $4')
-                        : item.Number
-                      }
+                        : item.Number}
                     </Typography>
                   </Grid>
 
-                  {item.InternationalDeliveryType === 'Import' &&
+                  {item.InternationalDeliveryType === 'Import' && (
                     <Grid item>
-                        <LanguageIcon fontSize="small" color="error" sx={{ ml: 0.5, mt: '5px' }} />
+                      <LanguageIcon fontSize="small" color="error" sx={{ ml: 0.5, mt: '5px' }} />
                     </Grid>
-                  }
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -62,11 +62,7 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
             <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 1 }}>
               <Grid item xs="auto">
                 <Typography color="text.secondary">
-                  {format(
-                    parse(item.DateCreated, 'dd-MM-y H:m:ss', new Date()),
-                    'dd MMM y',
-                    { locale: uk }
-                  )}
+                  {format(parse(item.DateCreated, 'dd-MM-y H:m:ss', new Date()), 'dd MMM y', { locale: uk })}
                 </Typography>
               </Grid>
 
@@ -89,15 +85,11 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
 
             <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 0 }}>
               <Grid item xs="auto">
-                <Typography>
-                  {item.CitySender}
-                </Typography>
+                <Typography>{item.CitySender}</Typography>
               </Grid>
 
               <Grid item xs="auto" textAlign="right">
-                <Typography>
-                  {item.CityRecipient}
-                </Typography>
+                <Typography>{item.CityRecipient}</Typography>
               </Grid>
             </Grid>
 
@@ -106,7 +98,7 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
             </Typography>
           </CardContent>
 
-          <Divider sx={{ mt: "auto" }} />
+          <Divider sx={{ mt: 'auto' }} />
 
           <CardActions>
             <Typography sx={{ fontSize: 14, ml: 1 }} color="text.secondary" gutterBottom>

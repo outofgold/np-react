@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { MovementItem } from '../types/DocumentEWMovement';
 import { Box, Stack, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleIcon from '@mui/icons-material/Circle';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { uk } from 'date-fns/locale';
 import { addMinutes, differenceInCalendarDays, format, formatRelative, parseISO } from 'date-fns';
+import { MovementItem } from '../types/DocumentEWMovement';
 
 interface Props {
   type: 'passed' | 'now' | 'future';
@@ -26,13 +26,14 @@ const icon = (type: Props['type']): JSX.Element => {
 };
 
 const DocumentMovementItem: FC<Props> = ({ type, item }) => {
-  const dateItem = addMinutes(parseISO(item.Date), (new Date()).getTimezoneOffset());
+  const dateItem = addMinutes(parseISO(item.Date), new Date().getTimezoneOffset());
 
   const diffDays = differenceInCalendarDays(dateItem, new Date());
 
-  const dateString = Math.abs(diffDays) <= 1
-    ? formatRelative(dateItem, new Date(), { locale: uk })
-    : format(dateItem, 'dd MMM y HH:mm', { locale: uk });
+  const dateString =
+    Math.abs(diffDays) <= 1
+      ? formatRelative(dateItem, new Date(), { locale: uk })
+      : format(dateItem, 'dd MMM y HH:mm', { locale: uk });
 
   return (
     <Stack direction="row" alignItems="center" gap={1} sx={{ my: 1 }}>
@@ -41,7 +42,9 @@ const DocumentMovementItem: FC<Props> = ({ type, item }) => {
       <Box>
         <Typography fontSize={13}>{item.EventDescription}</Typography>
 
-        <Typography fontSize={13} color={'grey'}>{dateString}</Typography>
+        <Typography fontSize={13} color={'grey'}>
+          {dateString}
+        </Typography>
       </Box>
     </Stack>
   );

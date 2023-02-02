@@ -1,9 +1,9 @@
-import { useLocalStorage } from './useLocalStorage';
+import { useCallback, useMemo } from 'react';
 import { DocumentByPhone } from '../types/DocumentByPhone';
 import { StatusDocument } from '../types/StatusDocument';
-import { useCallback, useMemo } from 'react';
 import { getClosedDocumentsByPhone, getStatusDocuments, getUnclosedDocumentsByPhone } from '../api';
 import { CustomStatusDocument } from '../types/CustomStatusDocument';
+import { useLocalStorage } from './useLocalStorage';
 
 const transformResult = (docsByPhone: DocumentByPhone[], statusDocs: StatusDocument[]): CustomStatusDocument[] => {
   const ids = docsByPhone.map(({ Barcode }) => Barcode);
@@ -16,30 +16,32 @@ const transformResult = (docsByPhone: DocumentByPhone[], statusDocs: StatusDocum
     }));
 };
 
-const useNpDocuments = () => { // todo api error handling
-  const [unclosedDocuments, setUnclosedDocuments] = useLocalStorage<DocumentByPhone[] | null>('UnclosedDocuments', null);
+const useNpDocuments = () => {
+  // todo api error handling
+  const [unclosedDocuments, setUnclosedDocuments] = useLocalStorage<DocumentByPhone[] | null>(
+    'UnclosedDocuments',
+    null
+  );
+
   const [closedDocuments, setClosedDocuments] = useLocalStorage<DocumentByPhone[] | null>('ClosedDocuments', null);
   const [statusDocuments, setStatusDocuments] = useLocalStorage<StatusDocument[] | null>('StatusDocuments', null);
 
-  const fetchDocuments = useCallback(
-    async () => {
-      const [freshUnclosedDocuments, freshClosedDocuments] = await Promise.all([
-        getUnclosedDocumentsByPhone(),
-        getClosedDocumentsByPhone(),
-      ]);
+  const fetchDocuments = useCallback(async () => {
+    const [freshUnclosedDocuments, freshClosedDocuments] = await Promise.all([
+      getUnclosedDocumentsByPhone(),
+      getClosedDocumentsByPhone(),
+    ]);
 
-      setUnclosedDocuments(freshUnclosedDocuments);
-      setClosedDocuments(freshClosedDocuments);
+    setUnclosedDocuments(freshUnclosedDocuments);
+    setClosedDocuments(freshClosedDocuments);
 
-      const freshStatusDocuments = await getStatusDocuments([
-        ...freshUnclosedDocuments.map(({ Barcode }) => Barcode),
-        ...freshClosedDocuments.map(({ Barcode }) => Barcode),
-      ]);
+    const freshStatusDocuments = await getStatusDocuments([
+      ...freshUnclosedDocuments.map(({ Barcode }) => Barcode),
+      ...freshClosedDocuments.map(({ Barcode }) => Barcode),
+    ]);
 
-      setStatusDocuments(freshStatusDocuments);
-    },
-    [setClosedDocuments, setStatusDocuments, setUnclosedDocuments]
-  );
+    setStatusDocuments(freshStatusDocuments);
+  }, [setClosedDocuments, setStatusDocuments, setUnclosedDocuments]);
 
   const unclosedStatusDocuments = useMemo(
     () => (unclosedDocuments && statusDocuments && transformResult(unclosedDocuments, statusDocuments)) || [],
