@@ -72,13 +72,15 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
 
               <Grid item xs="auto" textAlign="right">
                 <Typography color="text.secondary">
-                  {format(
-                    item.ActualDeliveryDate
-                      ? parse(item.ActualDeliveryDate, 'y-MM-dd H:m:ss', new Date())
-                      : parse(item.ScheduledDeliveryDate, 'dd-MM-y H:m:ss', new Date()),
-                    'dd MMM y',
-                    { locale: uk }
-                  )}
+                  {Boolean(item.ActualDeliveryDate.length || item.ScheduledDeliveryDate.length)
+                    ? format(
+                        item.ActualDeliveryDate
+                          ? parse(item.ActualDeliveryDate, 'y-MM-dd H:m:ss', new Date())
+                          : parse(item.ScheduledDeliveryDate, 'dd-MM-y H:m:ss', new Date()),
+                        'dd MMM y',
+                        { locale: uk }
+                      )
+                    : '???'}
                 </Typography>
               </Grid>
             </Grid>
