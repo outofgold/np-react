@@ -137,9 +137,19 @@ const DocumentDetailsDialog: FC<Props> = ({ document, handleClose }) => {
                 </Typography>
               </Box>
 
-              <Box sx={{ mt: 1 }}>
-                <Typography fontWeight={'bolder'}>Послуги з доставки {document.AmountToPay} грн</Typography>
-              </Box>
+              {Boolean(document.DocumentCost.length) && (
+                <Box sx={{ mt: 1 }}>
+                  <Typography fontWeight={'bolder'}>
+                    Послуги з доставки {document.DocumentCost} грн
+                    {document.ExpressWaybillPaymentStatus === 'Payed' && (
+                      <Typography component={'span'} color={'lightgreen'}>
+                        {' '}
+                        (сплачено)
+                      </Typography>
+                    )}
+                  </Typography>
+                </Box>
+              )}
             </Grid>
 
             <Grid item xs={12} md={6}>
