@@ -4,7 +4,7 @@ import { DocumentByPhone } from '@app/types/DocumentByPhone';
 import { StatusDocument } from '@app/types/StatusDocument';
 import { ApiResponse } from '@app/types/ApiResponse';
 import { DocumentEWMovement } from '@app/types/DocumentEWMovement';
-import { baseUrl, deviceName } from '@app/api/constants';
+import { deviceName } from '@app/api/constants';
 
 const userPhone = localStorage.getItem('npuid')?.slice(-12);
 
@@ -26,7 +26,8 @@ const model = {
 };
 
 const instance = axios.create({
-  baseURL: baseUrl,
+  // fixme for production
+  baseURL: `${window.location.protocol}//${window.location.hostname}:9999/https://api.novaposhta.ua/v2.0/json/`,
   headers: {
     'content-type': 'application/json; charset=UTF-8',
     'devicename': deviceName,
