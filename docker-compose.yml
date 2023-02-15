@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  react:
+    container_name: "np-react"
+    restart: unless-stopped
+    image: nginx:alpine
+    volumes:
+      - ./build/:/usr/share/nginx/html/
+    ports:
+      - "4000:80"
+
+  proxy:
+    container_name: "np-proxy"
+    restart: unless-stopped
+    image: node:18-alpine
+    working_dir: /app
+    command: node build/proxy/proxy.js
+    volumes:
+      - ./proxy/:/app
+    ports:
+      - "9999:9999"
+    stop_signal: SIGKILL

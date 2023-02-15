@@ -4,7 +4,8 @@
   "description": "",
   "main": "proxy.ts",
   "scripts": {
-    "start": "PORT=9999 ts-node proxy.ts"
+    "start": "PORT=9999 ts-node proxy.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@types/express": "^4.17.16",
     "@types/express-http-proxy": "^1.6.3",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   }
 }

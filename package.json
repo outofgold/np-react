@@ -27,12 +27,13 @@
   "scripts": {
     "dev": "concurrently --kill-others-on-fail -n \"FE,Proxy\" \"craco start\" \"cd proxy && npm start\"",
     "start": "serve -s build",
-    "build": "craco build",
+    "build": "craco build && cd proxy && npm run build",
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "npm run lint -- --fix",
     "pretty": "prettier --write src/",
+    "preinstall": "node -e \"fs.existsSync('.env') || fs.copyFileSync('.env.example', '.env')\"",
     "postinstall": "cd proxy && npm i"
   },
   "eslintConfig": {

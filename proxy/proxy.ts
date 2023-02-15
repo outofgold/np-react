@@ -3,7 +3,7 @@ import proxy from 'express-http-proxy';
 import { userAgent } from '../src/api/constants';
 
 const app = express();
-const { PORT } = process.env;
+const PORT = process.env.PORT || 9999;
 
 app.use((req, ...args) => {
     const url = req.url.replace(/^\//, '');
