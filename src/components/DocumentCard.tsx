@@ -1,11 +1,13 @@
 import React, { FC, ReactElement } from 'react';
-import { Card, CardActionArea, CardActions, CardContent, Divider } from '@mui/material';
+import { Card, CardActionArea, CardActions, CardContent, Divider, IconButton, SxProps } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import CancelIcon from '@mui/icons-material/Cancel';
 import Typography from '@mui/material/Typography';
 import LanguageIcon from '@mui/icons-material/Language';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
+import StarsIcon from '@mui/icons-material/Stars';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import { uk } from 'date-fns/locale';
 import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
@@ -14,16 +16,21 @@ interface Props {
   item: CustomStatusDocument;
   isArchived: boolean;
   handleClick: () => void;
+  handleRemove?: () => void;
 }
 
-const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElement => {
+const headerGridItemStyle: SxProps = {
+  paddingTop: '0 !important',
+};
+
+const DocumentCard: FC<Props> = ({ item, isArchived, handleClick, handleRemove }): ReactElement => {
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardActionArea onClick={handleClick}>
           <CardContent>
             <Grid container alignItems="center" spacing={2} sx={{ height: 80 }}>
-              <Grid item xs="auto">
+              <Grid item xs="auto" sx={headerGridItemStyle}>
                 {item.CustomType === 'Sender' && (
                   <UnarchiveIcon color={isArchived ? 'disabled' : 'error'} fontSize="large" />
                 )}
@@ -31,9 +38,11 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
                 {item.CustomType === 'Recipient' && (
                   <ArchiveIcon color={isArchived ? 'disabled' : 'error'} fontSize="large" />
                 )}
+
+                {item.CustomType === 'Fav' && <StarsIcon color={'error'} fontSize="large" />}
               </Grid>
 
-              <Grid item>
+              <Grid item sx={headerGridItemStyle}>
                 {item.CustomName && (
                   <Typography variant="h6" fontWeight="bold" component="div">
                     {item.CustomName}
@@ -59,7 +68,7 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
               </Grid>
             </Grid>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 1 }}>
+            <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 0 }}>
               <Grid item xs="auto">
                 <Typography color="text.secondary">
                   {format(parse(item.DateCreated, 'dd-MM-y H:m:ss', new Date()), 'dd MMM y', { locale: uk })}
@@ -99,15 +108,21 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick }): ReactElemen
               {item.Status}
             </Typography>
           </CardContent>
-
-          <Divider sx={{ mt: 'auto' }} />
-
-          <CardActions>
-            <Typography sx={{ fontSize: 14, ml: 1 }} color="text.secondary" gutterBottom>
-              {item.CargoDescriptionString}
-            </Typography>
-          </CardActions>
         </CardActionArea>
+
+        <Divider sx={{ mt: 'auto' }} />
+
+        <CardActions>
+          <Typography sx={{ fontSize: 14, ml: 1 }} color="text.secondary" gutterBottom>
+            {item.CargoDescriptionString}
+          </Typography>
+
+          {handleRemove && (
+            <IconButton sx={{ p: 0, ml: 'auto' }} onClick={handleRemove}>
+              <CancelIcon htmlColor="grey" />
+            </IconButton>
+          )}
+        </CardActions>
       </Card>
     </Grid>
   );

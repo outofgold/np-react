@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -13,16 +14,19 @@ import { DocumentCard } from '@app/components/DocumentCard';
 import { useNpDocuments } from '@app/hooks/useNpDocuments';
 import { DocumentDetailsDialog } from '@app/components/DocumentDetailsDialog';
 import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
+import { AddDocumentDialog } from '@app/components/AddDocumentDialog';
 
 const Dashboard = () => {
-  const { unclosedStatusDocuments, closedStatusDocuments, fetchDocuments } = useNpDocuments();
+  const { unclosedStatusDocs, closedStatusDocs, favStatusDocs, addFavDoc, removeFavDoc, fetchDocs } = useNpDocuments();
+
   const [modalDocument, setModalDocument] = useState<CustomStatusDocument | null>(null);
+  const [isDocAddModalOpen, setIsDocAddModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const refreshAll = useCallback(() => {
     setLoading(true);
-    fetchDocuments().then(() => setLoading(false));
-  }, [fetchDocuments]);
+    fetchDocs().then(() => setLoading(false));
+  }, [fetchDocs]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -35,9 +39,15 @@ const Dashboard = () => {
           {loading && <CircularProgress color={'error'} />}
 
           {!loading && (
-            <IconButton color="inherit" title="Оновити" onClick={() => loading || refreshAll()}>
-              <RefreshIcon />
-            </IconButton>
+            <Box>
+              <IconButton color="inherit" title="Додати" onClick={() => setIsDocAddModalOpen(true)}>
+                <AddIcon />
+              </IconButton>
+
+              <IconButton color="inherit" title="Оновити" onClick={() => loading || refreshAll()}>
+                <RefreshIcon />
+              </IconButton>
+            </Box>
           )}
         </Toolbar>
       </MuiAppBar>
@@ -56,7 +66,7 @@ const Dashboard = () => {
 
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-            {unclosedStatusDocuments.map((item) => (
+            {unclosedStatusDocs.map((item) => (
               <DocumentCard
                 key={item.Number}
                 isArchived={false}
@@ -65,13 +75,35 @@ const Dashboard = () => {
               />
             ))}
 
-            {Boolean(unclosedStatusDocuments.length && closedStatusDocuments.length) && (
+            {Boolean(unclosedStatusDocs.length && favStatusDocs.length) && (
               <Grid item xs={12}>
                 <Divider />
               </Grid>
             )}
 
-            {closedStatusDocuments.map((item) => (
+            {favStatusDocs.map((item) => (
+              <DocumentCard
+                key={item.Number}
+                isArchived={false}
+                item={item}
+                handleClick={() => setModalDocument(item)}
+                handleRemove={() => removeFavDoc(item.Number)}
+              />
+            ))}
+
+            {Boolean(favStatusDocs.length && closedStatusDocs.length) && (
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+            )}
+
+            {Boolean(unclosedStatusDocs.length && closedStatusDocs.length && !favStatusDocs.length) && (
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+            )}
+
+            {closedStatusDocs.map((item) => (
               <DocumentCard
                 key={item.Number}
                 isArchived={true}
@@ -84,6 +116,12 @@ const Dashboard = () => {
       </Box>
 
       <DocumentDetailsDialog document={modalDocument} handleClose={() => setModalDocument(null)} />
+
+      <AddDocumentDialog
+        isOpen={isDocAddModalOpen}
+        handleAdd={(number) => addFavDoc(number)}
+        handleClose={() => setIsDocAddModalOpen(false)}
+      />
     </Box>
   );
 };

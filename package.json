@@ -25,7 +25,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail -n \"FE,Proxy\" \"craco start\" \"cd proxy && npm start\"",
+    "dev": "PORT=4000 concurrently --kill-others-on-fail -n \"FE,Proxy\" \"craco start\" \"cd proxy && npm start\"",
     "start": "serve -s build",
     "build": "craco build && cd proxy && npm run build",
     "test": "craco test",
