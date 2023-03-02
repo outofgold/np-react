@@ -23,11 +23,14 @@ const useNpDocuments = () => {
   const [closedDocs, setClosedDocs] = useLocalStorage<DocumentByPhone[] | null>('ClosedDocuments', null);
   const [favDocs, setFavDocs] = useLocalStorage<DocumentByPhone[] | null>('FavDocuments', null);
   const [statusDocs, setStatusDocs] = useLocalStorage<StatusDocument[] | null>('StatusDocuments', null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const firstRender = useFirstRender();
   const [favDocsUpdateTrigger, setFavDocsUpdateTrigger] = useState<number>(Date.now());
 
   const fetchDocs = useCallback(async () => {
+    setIsLoading(true);
+
     const [freshUnclosedDocuments, freshClosedDocuments] = await Promise.all([
       getUnclosedDocumentsByPhone(),
       getClosedDocumentsByPhone(),
@@ -45,20 +48,25 @@ const useNpDocuments = () => {
     const freshStatusDocuments = await getStatusDocuments([...new Set(docIDsToFetch)]);
 
     setStatusDocs(freshStatusDocuments);
+
+    setIsLoading(false);
   }, [favDocs]);
 
-  const addFavDoc = useCallback(async (number: DocumentByPhone['Barcode']) => {
-    // todo: verify via request?
-    setFavDocs((prevState) => [
-      ...(prevState || []),
-      {
-        Barcode: number,
-        DataType: 'Fav',
-      },
-    ]);
+  const addFavDoc = useCallback(
+    async (number: DocumentByPhone['Barcode']) => {
+      // todo: verify via request?
+      setFavDocs((prevState) => [
+        ...(prevState || []),
+        {
+          Barcode: number,
+          DataType: 'Fav',
+        },
+      ]);
 
-    setFavDocsUpdateTrigger(Date.now());
-  }, [setFavDocs, setFavDocsUpdateTrigger]);
+      setFavDocsUpdateTrigger(Date.now());
+    },
+    [setFavDocs, setFavDocsUpdateTrigger]
+  );
 
   const removeFavDoc = useCallback(
     (number: DocumentByPhone['Barcode']) => {
@@ -103,6 +111,7 @@ const useNpDocuments = () => {
     addFavDoc,
     removeFavDoc,
     fetchDocs,
+    isLoading,
   };
 };
 

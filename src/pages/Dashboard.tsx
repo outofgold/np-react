@@ -9,7 +9,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { CircularProgress, Divider } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { DocumentCard } from '@app/components/DocumentCard';
 import { useNpDocuments } from '@app/hooks/useNpDocuments';
 import { DocumentDetailsDialog } from '@app/components/DocumentDetailsDialog';
@@ -17,16 +17,11 @@ import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
 import { AddDocumentDialog } from '@app/components/AddDocumentDialog';
 
 const Dashboard = () => {
-  const { unclosedStatusDocs, closedStatusDocs, favStatusDocs, addFavDoc, removeFavDoc, fetchDocs } = useNpDocuments();
+  const { unclosedStatusDocs, closedStatusDocs, favStatusDocs, addFavDoc, removeFavDoc, fetchDocs, isLoading } =
+    useNpDocuments();
 
   const [modalDocument, setModalDocument] = useState<CustomStatusDocument | null>(null);
   const [isDocAddModalOpen, setIsDocAddModalOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const refreshAll = useCallback(() => {
-    setLoading(true);
-    fetchDocs().then(() => setLoading(false));
-  }, [fetchDocs]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -36,15 +31,15 @@ const Dashboard = () => {
             Мої посилки
           </Typography>
 
-          {loading && <CircularProgress color={'error'} />}
+          {isLoading && <CircularProgress color={'error'} />}
 
-          {!loading && (
+          {!isLoading && (
             <Box>
               <IconButton color="inherit" title="Додати" onClick={() => setIsDocAddModalOpen(true)}>
                 <AddIcon />
               </IconButton>
 
-              <IconButton color="inherit" title="Оновити" onClick={() => loading || refreshAll()}>
+              <IconButton color="inherit" title="Оновити" onClick={() => fetchDocs()}>
                 <RefreshIcon />
               </IconButton>
             </Box>
