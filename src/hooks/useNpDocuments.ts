@@ -48,7 +48,7 @@ const useNpDocuments = () => {
   }, [favDocs]);
 
   const addFavDoc = useCallback(async (number: DocumentByPhone['Barcode']) => {
-    // todo: verify?
+    // todo: verify via request?
     setFavDocs((prevState) => [
       ...(prevState || []),
       {
@@ -58,7 +58,7 @@ const useNpDocuments = () => {
     ]);
 
     setFavDocsUpdateTrigger(Date.now());
-  }, []);
+  }, [setFavDocs, setFavDocsUpdateTrigger]);
 
   const removeFavDoc = useCallback(
     (number: DocumentByPhone['Barcode']) => {
@@ -68,10 +68,16 @@ const useNpDocuments = () => {
   );
 
   useEffect(() => {
-    if (!firstRender) {
-      fetchDocs().then();
+    if (!firstRender && statusDocs && favDocs) {
+      const statusDocBarcodes = statusDocs.map((doc) => doc.Number);
+
+      const needToUpdate = Boolean(favDocs.filter((doc) => !statusDocBarcodes.includes(doc.Barcode)).length);
+
+      if (needToUpdate) {
+        fetchDocs().then();
+      }
     }
-  }, [favDocsUpdateTrigger]);
+  }, [favDocsUpdateTrigger, statusDocs, favDocs]);
 
   const unclosedStatusDocs = useMemo(
     () => (unclosedDocs && statusDocs && transformResult(unclosedDocs, statusDocs)) || [],

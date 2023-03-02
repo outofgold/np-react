@@ -19,7 +19,7 @@ const AddDocumentDialog: FC<Props> = ({ isOpen, handleAdd, handleClose }) => {
 
     handleAdd(trimmed);
     handleClose();
-  }, [barcode]);
+  }, [barcode, handleAdd, handleClose]);
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
