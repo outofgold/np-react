@@ -15,12 +15,22 @@ import { useNpDocuments } from '@app/hooks/useNpDocuments';
 import { DocumentDetailsDialog } from '@app/components/DocumentDetailsDialog';
 import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
 import { AddDocumentDialog } from '@app/components/AddDocumentDialog';
+import { EditDocTitle } from '@app/components/EditDocTitle';
 
 const Dashboard = () => {
-  const { unclosedStatusDocs, closedStatusDocs, favStatusDocs, addFavDoc, removeFavDoc, fetchDocs, isLoading } =
-    useNpDocuments();
+  const {
+    unclosedStatusDocs,
+    closedStatusDocs,
+    favStatusDocs,
+    addFavDoc,
+    removeFavDoc,
+    fetchDocs,
+    setDocTitle,
+    isLoading,
+  } = useNpDocuments();
 
   const [modalDocument, setModalDocument] = useState<CustomStatusDocument | null>(null);
+  const [modalEditDocumentTitle, setModalEditDocumentTitle] = useState<CustomStatusDocument | null>(null);
   const [isDocAddModalOpen, setIsDocAddModalOpen] = useState<boolean>(false);
 
   return (
@@ -67,6 +77,7 @@ const Dashboard = () => {
                 isArchived={false}
                 item={item}
                 handleClick={() => setModalDocument(item)}
+                handleChangeTitle={() => setModalEditDocumentTitle(item)}
               />
             ))}
 
@@ -82,6 +93,7 @@ const Dashboard = () => {
                 isArchived={false}
                 item={item}
                 handleClick={() => setModalDocument(item)}
+                handleChangeTitle={() => setModalEditDocumentTitle(item)}
                 handleRemove={() => removeFavDoc(item.Number)}
               />
             ))}
@@ -104,6 +116,7 @@ const Dashboard = () => {
                 isArchived={true}
                 item={item}
                 handleClick={() => setModalDocument(item)}
+                handleChangeTitle={() => setModalEditDocumentTitle(item)}
               />
             ))}
           </Grid>
@@ -114,8 +127,14 @@ const Dashboard = () => {
 
       <AddDocumentDialog
         isOpen={isDocAddModalOpen}
-        handleAdd={(number) => addFavDoc(number)}
+        handleAdd={addFavDoc}
         handleClose={() => setIsDocAddModalOpen(false)}
+      />
+
+      <EditDocTitle
+        document={modalEditDocumentTitle}
+        handleEdit={setDocTitle}
+        handleClose={() => setModalEditDocumentTitle(null)}
       />
     </Box>
   );

@@ -6,7 +6,13 @@ import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
 import { useLocalStorage } from '@app/hooks/useLocalStorage';
 import { useFirstRender } from '@app/hooks/useFirstRender';
 
-const transformResult = (docsByPhone: DocumentByPhone[], statusDocs: StatusDocument[]): CustomStatusDocument[] => {
+interface DocTitles extends Record<string, string | undefined> {}
+
+const transformResult = (
+  docsByPhone: DocumentByPhone[],
+  statusDocs: StatusDocument[],
+  docTitles: DocTitles
+): CustomStatusDocument[] => {
   const ids = docsByPhone.map(({ Barcode }) => Barcode);
 
   return statusDocs
@@ -14,6 +20,7 @@ const transformResult = (docsByPhone: DocumentByPhone[], statusDocs: StatusDocum
     .map((item) => ({
       ...item,
       CustomType: docsByPhone.find(({ Barcode }) => item.Number === Barcode)!.DataType,
+      CustomName: docTitles[item.Number],
     }));
 };
 
@@ -23,6 +30,7 @@ const useNpDocuments = () => {
   const [closedDocs, setClosedDocs] = useLocalStorage<DocumentByPhone[] | null>('ClosedDocuments', null);
   const [favDocs, setFavDocs] = useLocalStorage<DocumentByPhone[] | null>('FavDocuments', null);
   const [statusDocs, setStatusDocs] = useLocalStorage<StatusDocument[] | null>('StatusDocuments', null);
+  const [docTitles, setDocTitles] = useLocalStorage<DocTitles>('DocTitles', {});
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const firstRender = useFirstRender();
@@ -77,6 +85,16 @@ const useNpDocuments = () => {
     [setFavDocs]
   );
 
+  const setDocTitle = useCallback(
+    (barcode: string, title?: string) => {
+      setDocTitles((prevState) => ({
+        ...prevState,
+        [barcode]: title,
+      }));
+    },
+    [setDocTitles]
+  );
+
   useEffect(() => {
     if (!firstRender && statusDocs && favDocs) {
       const statusDocBarcodes = statusDocs.map((doc) => doc.Number);
@@ -90,18 +108,18 @@ const useNpDocuments = () => {
   }, [favDocsUpdateTrigger, statusDocs, favDocs]);
 
   const unclosedStatusDocs = useMemo(
-    () => (unclosedDocs && statusDocs && transformResult(unclosedDocs, statusDocs)) || [],
-    [unclosedDocs, statusDocs]
+    () => (unclosedDocs && statusDocs && transformResult(unclosedDocs, statusDocs, docTitles)) || [],
+    [unclosedDocs, statusDocs, docTitles]
   );
 
   const closedStatusDocs = useMemo(
-    () => (closedDocs && statusDocs && transformResult(closedDocs, statusDocs)) || [],
-    [closedDocs, statusDocs]
+    () => (closedDocs && statusDocs && transformResult(closedDocs, statusDocs, docTitles)) || [],
+    [closedDocs, statusDocs, docTitles]
   );
 
   const favStatusDocs = useMemo(
-    () => (favDocs && statusDocs && transformResult(favDocs, statusDocs)) || [],
-    [favDocs, statusDocs]
+    () => (favDocs && statusDocs && transformResult(favDocs, statusDocs, docTitles)) || [],
+    [favDocs, statusDocs, docTitles]
   );
 
   return {
@@ -111,6 +129,7 @@ const useNpDocuments = () => {
     addFavDoc,
     removeFavDoc,
     fetchDocs,
+    setDocTitle,
     isLoading,
   };
 };

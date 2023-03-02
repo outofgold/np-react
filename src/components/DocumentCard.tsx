@@ -1,8 +1,9 @@
 import React, { FC, ReactElement } from 'react';
-import { Card, CardActionArea, CardActions, CardContent, Divider, IconButton, SxProps } from '@mui/material';
+import { Box, Card, CardActionArea, CardActions, CardContent, Divider, IconButton, SxProps } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import LanguageIcon from '@mui/icons-material/Language';
 import format from 'date-fns/format';
@@ -17,13 +18,14 @@ interface Props {
   isArchived: boolean;
   handleClick: () => void;
   handleRemove?: () => void;
+  handleChangeTitle?: () => void;
 }
 
 const headerGridItemStyle: SxProps = {
   paddingTop: '0 !important',
 };
 
-const DocumentCard: FC<Props> = ({ item, isArchived, handleClick, handleRemove }): ReactElement => {
+const DocumentCard: FC<Props> = ({ item, isArchived, handleClick, handleRemove, handleChangeTitle }): ReactElement => {
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -44,14 +46,14 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick, handleRemove }
 
               <Grid item sx={headerGridItemStyle}>
                 {item.CustomName && (
-                  <Typography variant="h6" fontWeight="bold" component="div">
+                  <Typography fontSize={18} fontWeight="bold" component="div" title={item.CustomName}>
                     {item.CustomName}
                   </Typography>
                 )}
 
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography component="span">
+                    <Typography component="span" color={item.CustomName ? 'grey' : 'white'}>
                       №
                       {item.Number.length === 14
                         ? item.Number.replace(/^(.{2})(.{4})(.{4})(.{4})$/, '$1 $2 $3 $4')
@@ -117,11 +119,19 @@ const DocumentCard: FC<Props> = ({ item, isArchived, handleClick, handleRemove }
             {item.CargoDescriptionString}
           </Typography>
 
-          {handleRemove && (
-            <IconButton sx={{ p: 0, ml: 'auto' }} onClick={handleRemove}>
-              <CancelIcon htmlColor="grey" />
-            </IconButton>
-          )}
+          <Box sx={{ ml: 'auto' }}>
+            {handleChangeTitle && (
+              <IconButton sx={{ p: 0, ml: 1 }} onClick={handleChangeTitle}>
+                <EditIcon htmlColor="grey" />
+              </IconButton>
+            )}
+
+            {handleRemove && (
+              <IconButton sx={{ p: 0, ml: 1 }} onClick={handleRemove}>
+                <CancelIcon htmlColor="grey" />
+              </IconButton>
+            )}
+          </Box>
         </CardActions>
       </Card>
     </Grid>
