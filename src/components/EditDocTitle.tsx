@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { CustomStatusDocument } from '@app/types/CustomStatusDocument';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 interface Props {
   document: CustomStatusDocument | null;
@@ -24,6 +25,13 @@ const EditDocTitle: FC<Props> = ({ document, handleEdit, handleClose }) => {
 
     handleClose();
   }, [document, title, handleEdit, handleClose]);
+
+  useHotkeys(
+    'Enter',
+    handleSubmit,
+    { enabled: Boolean(document), enableOnFormTags: true, keyup: true, keydown: false },
+    [document, handleSubmit]
+  );
 
   return (
     <Dialog open={Boolean(document)} onClose={handleClose}>

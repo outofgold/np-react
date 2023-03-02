@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 interface Props {
   isOpen: boolean;
@@ -20,6 +21,11 @@ const AddDocumentDialog: FC<Props> = ({ isOpen, handleAdd, handleClose }) => {
     handleAdd(trimmed);
     handleClose();
   }, [barcode, handleAdd, handleClose]);
+
+  useHotkeys('Enter', validateBarcode, { enabled: isOpen, enableOnFormTags: true, keyup: true, keydown: false }, [
+    isOpen,
+    validateBarcode,
+  ]);
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
