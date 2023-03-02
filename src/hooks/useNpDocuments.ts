@@ -62,7 +62,9 @@ const useNpDocuments = () => {
 
   const removeFavDoc = useCallback(
     (number: DocumentByPhone['Barcode']) => {
-      setFavDocs((prevState) => prevState?.filter(({ Barcode }) => Barcode !== number) || []);
+      if (confirm(`Видалити ТТН ${number}?`)) {
+        setFavDocs((prevState) => prevState?.filter(({ Barcode }) => Barcode !== number) || []);
+      }
     },
     [setFavDocs]
   );
